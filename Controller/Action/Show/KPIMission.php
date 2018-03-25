@@ -3,67 +3,59 @@
 class KPIMission implements actionPerformed {
 
     public function actionPerformed($event) {
-        $SingleplayerModel = new SingleplayerModel();
-        foreach ($SingleplayerModel->SelectKPIMission() as $row) {
+        $MissionModel = new MissionModel();
+        foreach ($MissionModel->selectKPIMission() as $row) {
             switch ($row["MissionPeriodList"]) {
-                            case '1':
-                                $MissionPerioList='小時';
-                                break;
-                            case '2':
-                                $MissionPerioList='天';
-                                break;
-                            case '3':
-                                $MissionPerioList='月';
-                                break;
-                            case '4':
-                                $MissionPerioList='年';
-                                break;
-                            default:
-                                $MissionPerioList='';
-                                break;
-                        }
-            switch ($row['Status']) {
+                case '1':
+                    $MissionPerioList = '小時';
+                    $NextRefreshTime = strtotime($row['MissionRefreshTime']) + (60 * 60 * $row['MissionPeriod']);
+                    break;
+                case '2':
+                    $MissionPerioList = '天';
+                    $NextRefreshTime = strtotime($row['MissionRefreshTime']) + (60 * 60 * 24 * $row['MissionPeriod']);
+                    break;
+                case '3':
+                    $MissionPerioList = '月';
+                    $NextRefreshTime = strtotime($row['MissionRefreshTime']) + (60 * 60 * 24 * 7 * $row['MissionPeriod']);
+                    break;
+                case '4':
+                    $MissionPerioList = '年';
+                    $RefreshTime = strtotime($row['MissionRefreshTime']);
+                    $NextRefreshTime = mktime(date("G", $RefreshTime), date("i", $RefreshTime), date("s", $RefreshTime), date("m", $RefreshTime), date("d", $RefreshTime), date("Y", $RefreshTime) + $row['MissionPeriod']);
+                    break;
+                default:
+                    $MissionPerioList = '';
+                    $NextRefreshTime = '';
+                    break;
+            }
+            $NextRefreshTime = date("Y-m-d H:i:s", $NextRefreshTime);
+            /*`MissionID`, `MissionName`, `MissionDetails`, `MissionPoint`,
+            `MissionCreateTime`, `MissionStartTime`, `MissionLastFinishTime`,
+            `MissionRefreshTime`, `MissionEndTime`, `MissionFinishQuantity`,
+            `MissionRefreshQuantity`, `MissionStatus`, `MissionEndQuantity`,
+            `MissionPeriod`, `MissionPeriodList`, `MissionAttribute`*/
+            switch ($row['MissionStatus']) {
                 case 0:
                     $ProcessingMission[] = array(
                         'MissionID' => $row['MissionID'],
                         'MissionName' => $row['MissionName'],
                         'MissionPoint' => $row['MissionPoint'],
-                        'MissionEndTime' => $row['EndTime'],
+                        'MissionLastFinishTime' => $row['MissionLastFinishTime'],
+                        'NextRefreshTime' => $NextRefreshTime,
                         'MissionPeriod' => $row['MissionPeriod'],
-                        'MissionPeriodList' => $MissionPerioList,//$row["MissionPeriodList"],
-                        'RowID' => $row['RowID'],
-                        'LastFinishTime' => $row['LastFinishTime'],
-                        'FinishQuantity' => $row['FinishQuantity'],
-                        'MissionEndQuantity'=> $row['MissionEndQuantity'],
-                        'MissionCreater'=>$row['MissionCreater']);
+                        'MissionPeriodList' => $MissionPerioList,                        
+                        'MissionFinishQuantity' => $row['MissionFinishQuantity']);
                     break;
                 case 1:
                     $FinishMission[] = array(
                         'MissionID' => $row['MissionID'],
                         'MissionName' => $row['MissionName'],
                         'MissionPoint' => $row['MissionPoint'],
-                        'MissionEndTime' => $row['EndTime'],
+                        'MissionLastFinishTime' => $row['MissionLastFinishTime'],
+                        'NextRefreshTime' => $NextRefreshTime,
                         'MissionPeriod' => $row['MissionPeriod'],
-                        'MissionPeriodList' => $MissionPerioList,//$row["MissionPeriodList"],
-                        'RowID' => $row['RowID'],
-                        'LastFinishTime' => $row['LastFinishTime'],
-                        'FinishQuantity' => $row['FinishQuantity'],
-                        'MissionEndQuantity'=> $row['MissionEndQuantity'],
-                        'MissionCreater'=>$row['MissionCreater']);
-                    break;
-                case 2:
-                    $EndMission[] = array(
-                        'MissionID' => $row['MissionID'],
-                        'MissionName' => $row['MissionName'],
-                        'MissionPoint' => $row['MissionPoint'],
-                        'MissionEndTime' => $row['EndTime'],
-                        'MissionPeriod' => $row['MissionPeriod'],
-                        'MissionPeriodList' => $MissionPerioList,//$row["MissionPeriodList"],
-                        'RowID' => $row['RowID'],
-                        'LastFinishTime' => $row['LastFinishTime'],
-                        'FinishQuantity' => $row['FinishQuantity'],
-                        'MissionEndQuantity'=> $row['MissionEndQuantity'],
-                        'MissionCreater'=>$row['MissionCreater']);
+                        'MissionPeriodList' => $MissionPerioList, //$row["MissionPeriodList"],                        
+                        'MissionFinishQuantity' => $row['MissionFinishQuantity']);
                     break;
                 default :
                     break;
@@ -74,7 +66,6 @@ class KPIMission implements actionPerformed {
         $smarty = new KSmarty();
         @$smarty->assign("ProcessingMission", $ProcessingMission);
         @$smarty->assign("FinishMission", $FinishMission);
-        @$smarty->assign("EndMission", $EndMission);
         return $smarty->fetch("KPIMission.tpl");
     }
 
