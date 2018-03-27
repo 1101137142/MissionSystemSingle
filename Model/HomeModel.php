@@ -3,19 +3,21 @@
 class HomeModel extends Model {
 
     function reflashMissionStatus() {
-        $sql = "SELECT * FROM `mss_mission`";
+        //找出所有狀態為 未完成 或 完成 的任務 
+        $sql = "SELECT * FROM `mss_mission` WHERE `MissionStatus` = '1' or `MissionStatus` = '2'";
         $stmt = $this->cont->prepare($sql);
         $status[] = $stmt->execute();
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $refresh = false;
-            $RefreshTime=strtotime($row['MissionRefreshTime']);
+            $RefreshTime = strtotime($row['MissionRefreshTime']);
+            if (strtotime("now") >= strtotime($row['MissionEndTime']) && $row['MissionEndTime'] != '' && $row['MissionAttribute'] != '3') {
+                $sql_update = "update `mss_mission` set MissionStatus=2 where `MissionID`=?";
+                $stmt_update = $this->cont->prepare($sql_update);
+                $status[] = $stmt_update->execute(array($row['MissionID']));
+            }
             if ($row['MissionAttribute'] == '1' && ($row['MissionStatus'] == '0' || $row['MissionStatus'] == '1')) {
-                if (strtotime("now") >= strtotime($row['MissionEndTime']) && $row['MissionEndTime']!='') {
-                    $sql_update = "update `mss_mission` set MissionStatus=2 where `MissionID`=?";
-                    $stmt_update = $this->cont->prepare($sql_update);
-                    $status[] = $stmt_update->execute(array($row['MissionID']));
-                }else if(strtotime("now") >= $RefreshTime){
-                    $RefreshQuantity=0;
+                if (strtotime("now") >= $RefreshTime) {
+                    $RefreshQuantity = 0;
                     switch ($row['MissionPeriodList']) {
                         case '1':
                             while (strtotime("now") >= $RefreshTime + (60 * 60 * $row['MissionPeriod'])) {
@@ -26,14 +28,14 @@ class HomeModel extends Model {
                             break;
                         case '2':
                             while (strtotime("now") >= $RefreshTime + (60 * 60 * 24 * $row['MissionPeriod'])) {
-                                $RefreshTime = $RefreshTime + (60 * 60 *24* $row['MissionPeriod']);
+                                $RefreshTime = $RefreshTime + (60 * 60 * 24 * $row['MissionPeriod']);
                                 $RefreshQuantity = $RefreshQuantity + 1;
                                 $refresh = true;
                             };
                             break;
                         case '3':
                             while (strtotime("now") >= $RefreshTime + (60 * 60 * 24 * 7 * $row['MissionPeriod'])) {
-                                $RefreshTime = $RefreshTime + (60 * 60 *24*7* $row['MissionPeriod']);
+                                $RefreshTime = $RefreshTime + (60 * 60 * 24 * 7 * $row['MissionPeriod']);
                                 $RefreshQuantity = $RefreshQuantity + 1;
                                 $refresh = true;
                             };
@@ -48,9 +50,9 @@ class HomeModel extends Model {
                         default:
                             break;
                     }
-                    if($refresh == true){
+                    if ($refresh == true) {
                         $RefreshTime = date("Y-m-d H:i:s", $RefreshTime);
-                        $sql_update = "update `mss_mission` set `MissionStatus`=0 ,`MissionRefreshTime`='".$RefreshTime."',`MissionRefreshQuantity`=MissionRefreshQuantity+$RefreshQuantity where `MissionID`=?";
+                        $sql_update = "update `mss_mission` set `MissionStatus`=0 ,`MissionRefreshTime`='" . $RefreshTime . "',`MissionRefreshQuantity`=MissionRefreshQuantity+$RefreshQuantity where `MissionID`=?";
                         $stmt_update = $this->cont->prepare($sql_update);
                         $status[] = $stmt_update->execute(array($row['MissionID']));
                     }

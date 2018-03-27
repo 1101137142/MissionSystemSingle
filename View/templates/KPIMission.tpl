@@ -4,35 +4,10 @@
         $.ajax({
             type: "POST",
             url: url,
-            data: {RowID: ID,doAction:'KPIFinish'}, // serializes the form's elements.
+            dataType: "json",
+            data: {MissionID: ID, doMissionAction: 'finishKPIMission'}, // serializes the form's elements.
             success: function (data)
             {
-                alert("已變更任務狀態");
-                /*console.log(data);
-                 if (data == 'true') {
-                 alert("已變更任務狀態");
-                 } else {
-                 alert("任務狀態變更失敗");
-                 }*/
-                window.location.reload();
-            },
-            error: function (data) {
-                console.log('An error occurred.');
-                console.log(data);
-            }
-        });
-    }
-
-    function DelectMission(ID) {
-        var url = "index.php?action=MissionAction";
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: {RowID: ID,doAction:'KPIDelect'}, // serializes the form's elements.
-            success: function (data)
-            {
-                console.log(data);
-                alert("已刪除任務");
                 window.location.reload();
             },
             error: function (data) {
@@ -47,16 +22,10 @@
         $.ajax({
             type: "POST",
             url: url,
-            data: {RowID: ID,doAction:'KPIUnfinish'}, // serializes the form's elements.
+            dataType: "json",
+            data: {MissionID: ID, doMissionAction: 'unfinishKPIMission'}, // serializes the form's elements.
             success: function (data)
             {
-                alert("已變更任務狀態");
-                //console.log(data);
-                /*if (data == 'true') {
-                 alert("已變更任務狀態");
-                 } else {
-                 alert("任務狀態變更失敗");
-                 }*/
                 window.location.reload();
             },
             error: function (data) {
@@ -65,7 +34,95 @@
             }
         });
     }
+    function DelectMission(ID) {
+        var url = "index.php?action=MissionAction";
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: "json",
+            data: {MissionID: ID, doMissionAction: 'delectMission'}, // serializes the form's elements.
+            success: function (data)
+            {
+                window.location.reload();
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+            }
+        });
+    }
+    function createMission() {
+        //$('#MissionAttribute').val('1');
+        var check_form = true;
+        $('.notnull').each(function (k, v) {
+            var in_na = $(this).attr('name');
+            if ($(this).attr('type') == 'radio') {
+                //console.log($(this).attr('checked'));
+                if (!$('.' + in_na + ':checked').val()) {
+                    var f_name = $(this).data('fname');
+                    check_form = false;
+                    alert(f_name + '不可空白');
+                    return false;
+                }
+            } else if ($(this).attr('type') != 'radio' && $(this).attr('type') != 'password') {
+                if (!$(this).val().trim()) {
+                    var f_name = $(this).data('fname');
+                    check_form = false;
+                    alert(f_name + '不可空白');
+                    $(this).focus();
+                    return false;
+                }
+            }
+        });
+        if (check_form != true) {
+            return false;
+        }
+        var input_arr = new Object();
+        $("#createMissionForm").find('input').each(function (index, el) {
+            if ($(this).val() == '') {
+                var name = $(this).attr('name');
+                input_arr[name] = 'NULL';
+            }
 
+            if ($(this).attr('type') != 'checkbox' && $(this).attr('type') != 'radio') {
+                var name = $(this).attr('name');
+                input_arr[name] = $(this).val();
+            }
+            if ($(this).attr('type') == 'radio' && $(this).attr('checked') == 'checked') {
+                var na = $(this).attr('name');
+                input_arr[name] = $(this).val();
+            }
+        });
+        $("#createMissionForm").find('select').each(function (index, el) {
+            var name = $(this).attr('name');
+            input_arr[name] = $(this).val();
+        });
+        input_arr['MissionAttribute']='1';
+        //console.log(input_arr);
+        var url = "index.php?action=createMission";
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: "json",
+            data: input_arr,
+            success: function (data) {
+                /*console.log(data);
+                 alert('您建立了一個序號為' + data[0]['MissionID'] + '的' + data[0]['MissionName'] + '任務');*/
+                window.location.reload();
+            },
+            error: function (data) {
+
+                console.log('An error occurred.');
+                console.log(data);
+            }
+        })
+        //e.preventDefault(); // avoid to execute the actual submit of the form.
+    }
+    function setTime(field) {
+        var d = new Date();
+        $('#' + field).val(d.getFullYear() + '-' + (d.getMonth() + 1 < 10 ? '0' : '') + (d.getMonth() + 1) + '-' + (d.getDate() + 1) + 'T04:00');
+    }
+    ;
 
 
 
@@ -76,7 +133,7 @@
 
     <!--<table class="table table-hover" ID="NotFinishTable">-->
     <table class="table table-hover" ID="MissionTable">
-        <tr ><td colspan="2">未完成任務</td><td align=right colspan="8"><button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#createMission">新增任務</button></td></tr>
+        <tr ><td colspan="2"  align=left>未完成任務</td><td align=right colspan="8"><button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#createMission">新增任務</button></td></tr>
         <tr><td align=center>任務ID</td><td align=center>任務名稱</td><td align=center>分數</td>
             <td align=center>上次完成時間</td><td align=center>下次刷新時間</td><td align=center>循環週期</td>
             <td align=center>完成次數</td><td align=center>功能鍵</td></tr>
@@ -94,7 +151,7 @@
         <{/foreach}>
         <!--</table>
         <table class="table table-hover" ID="FinishTable">-->
-        <tr ><td colspan="2">已完成任務</td><td align=right colspan="8"><button type="button" class="btn btn-outline-success disabled">已完成任務</button></td></tr>
+        <tr ><td colspan="2" align=left>已完成任務</td><td align=right colspan="8"><button type="button" class="btn btn-outline-success disabled">已完成任務</button></td></tr>
         <tr><td align=center>任務ID</td><td align=center>任務名稱</td><td align=center>分數</td>
             <td align=center>上次完成時間</td><td align=center>下次刷新時間</td><td align=center>循環週期</td>
             <td align=center>完成次數</td><td align=center>功能鍵</td></tr>
@@ -104,7 +161,7 @@
             <td align="center"><{$item2.MissionFinishQuantity}></td>
             <td align=center>
                 <button id="EditBt<{$item2.MissionID}>" type="button" class="btn btn-outline-warning" onclick=EditMission(<{$item2.MissionID}>)>修改</button>
-                <button id="FinishBt<{$item2.MissionID}>" type="button" class="btn btn-outline-success" onclick=FinishMission(<{$item2.MissionID}>)>完成</button>
+                <button id="FinishBt<{$item2.MissionID}>" type="button" class="btn btn-outline-secondary" onclick=UnfinishMission(<{$item2.MissionID}>)>取消完成</button>
                 <button id="DelectBt<{$item2.MissionID}>" type="button" class="btn btn-outline-danger" onclick=DelectMission(<{$item2.MissionID}>)>刪除</button>
             </td></tr>
         <{foreachelse}>
@@ -125,21 +182,40 @@
                 </div>
                 <div class="modal-body">
                     <form ID="createMissionForm">
-                        <table class="table">
-                            <tr><td>任務名稱：</td><td><input type="text" name="MissionName" ID="MissionName" class="form-control"></td></tr>
-                            <tr><td>任務分數：</td><td><input type="number" name="MissionPoint" ID="MissionPoint" class="form-control"></td></tr>
-                            <tr><td>任務週期：</td><td><input type="number" name="MissionPeriod" ID="MissionPeriod" class="form-control">
-                                    <select ID="MissionPeriodList" name="MissionPeriodList" class="form-control" style="display: inline;width: 30%;">
-                                        <option value="1">小時</option>
-                                        <option value="2">天</option>
-                                        <option value="3">月</option>
-                                        <option value="4">年</option>
-                                    </select></td></tr>
-                            <tr><td>任務結束次數 (選填) ：</td><td><input type="number" name="MissionEndQuantity" ID="MissionEndQuantity" class="form-control"></td></tr>                            
-                            <tr><td>任務開始時間 　　　 ：</td><td><input type="datetime-local" name="StartTime" ID="StartTime" class="form-control"></td></tr>
-                            <tr><td>任務結束時間 (選填) ：</td><td><input type="datetime-local" name="MissionEndTime" ID="MissionEndTime" class="form-control"></td></tr>                            
-                        </table>
-                        <button type="submit" class="btn btn-success"  id="submitForm">送出</button>
+                        <div class="form-group">
+                            <label for="MissionName">任務名稱：</label>
+                            <input type="text" class="form-control notnull" id="MissionName" name="MissionName" placeholder="Enter Mission Name" data-fname="任務名稱">
+                        </div>
+                        <div class="form-group">
+                            <label for="MissionPoint">任務分數：</label>
+                            <input type="number" class="form-control notnull" id="MissionPoint" name="MissionPoint" placeholder="Enter Mission Point" data-fname="任務分數">
+                        </div>
+                        <div class="form-group">
+                            <label for="MissionPeriod">任務週期：</label><br>
+                            <input type="text" class="form-control notnull" id="MissionPeriod" name="MissionPeriod" placeholder="Enter Mission Period" style="display: inline;width: 75%;" data-fname="任務週期">
+                            <select ID="MissionPeriodList" name="MissionPeriodList" class="form-control" style="display: inline;width: 24%;">
+                                <option value="1">小時</option>
+                                <option value="2">天</option>
+                                <option value="3">月</option>
+                                <option value="4">年</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="MissionEndQuantity">任務結束次數 (選填) ：</label>
+                            <input type="number" class="form-control" id="MissionEndQuantity" name="MissionEndQuantity" placeholder="Enter Mission End Quantity">
+                        </div>
+                        <div class="form-group">
+                            <label for="MissionStartTime">任務開始時間 ：</label>
+                            <input type="datetime-local" class="form-control notnull" id="MissionStartTime" name="MissionStartTime" placeholder="Enter Mission Start Time" style="display: inline;width: 80%;"data-fname="任務開始時間">
+                            <button type="button" class="btn btn-light" onclick=setTime('MissionStartTime') style="display: inline;width: 19%;">明天4點</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="MissionEndTime">任務結束時間 (選填) ：</label>
+                            <input type="datetime-local" class="form-control" id="MissionEndTime" name="MissionEndTime" placeholder="Enter Mission End Time" style="display: inline;width: 80%;">
+                            <button type="button" class="btn btn-light" onclick=setTime('MissionEndTime') style="display: inline;width: 19%;">明天4點</button>
+                            <!--input type="hidden" class="form-control" id="MissionAttribute" name="MissionAttribute" -->
+                        </div>
+                        <button type="button" class="btn btn-success"  id="submitForm" onclick=createMission()>送出</button>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -148,69 +224,6 @@
             </div>
         </div>
     </div>
-    <!-- showOrtheMission Modal -->
-    <div id="showOrtheMission" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Mission List</h4>
-                </div>
-                <div class="modal-body">
-                    <form ID="createMissionForm">
-                        <table class="table">
-                            <tr><td>任務名稱：</td><td><input type="text" name="MissionName" ID="MissionName"></td></tr>
-                            <tr><td>任務分數：</td><td><input type="number" name="MissionPoint" ID="MissionPoint"></td></tr>
-                            <tr><td>任務週期：</td><td><input type="number" name="MissionPeriod" ID="MissionPeriod">
-                                    <select ID="MissionPeriodList" name="MissionPeriodList" class="form-control" style="display: inline;width: 30%;">
-                                        <option value="1">小時</option>
-                                        <option value="2">天</option>
-                                        <option value="3">月</option>
-                                        <option value="4">年</option>
-                                    </select></td></tr>
-                            <tr><td>任務結束次數 (選填) ：</td><td><input type="number" name="MissionEndQuantity" ID="MissionEndQuantity"></td></tr>                            
-                            <tr><td>任務開始時間 　　　 ：</td><td><input type="datetime-local" name="StartTime" ID="StartTime"></td></tr>
-                            <tr><td>任務結束時間 (選填) ：</td><td><input type="datetime-local" name="MissionEndTime" ID="MissionEndTime"></td></tr>                            
-                        </table>
-                        <button type="submit" class="btn btn-success"  id="submitForm">送出</button>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
 </div>
 
-
-<script>
-    $("#createMissionForm").submit(function (e) {
-
-        var url = "index.php?action=createKPIMission"; // the script where you handle the form input.
-        //var url = "Controller/Action/createMission.php";
-        //console.log($("#createMissionForm").serialize());
-        $.ajax({
-            type: "POST",
-            url: url,
-            dataType: 'json',
-            data: $("#createMissionForm").serialize(), // serializes the form's elements.
-            success: function (data) {
-                console.log(data);
-                if (data['Returnmsg'] == 'Not Login') {
-                    alert('您尚未登入');
-                } else {
-                    alert('您建立了一個序號為' + data[0]['MissionID'] + '的' + data[0]['MissionName'] + '任務');
-                }
-                //$("#NotFinishTable").append("<tr ><td align=center ></td><td></td><td></td><td ></td><td id=MS<$smarty.foreach.Mission.iteration}>></td><td></td><td align=center><button id=Bt type=button class=btn btn-success onclick=FinishMission(<$item.MissionID}>,<$item.MissionStatus}>)>完成</button></td></tr>")
-            },
-            error: function (data) {
-
-                console.log('An error occurred.');
-                console.log(data);
-            }
-        });
-        e.preventDefault(); // avoid to execute the actual submit of the form.
-    })
-</script>

@@ -3,31 +3,21 @@
 class MissionAction implements actionPerformed {
 
     public function actionPerformed($event) {
-        $SingleplayerModel = new SingleplayerModel();
-        $ID = $_POST["RowID"];
-        $doAction=$_POST["doAction"];
-        switch($doAction){
-            case 'KPIFinish':
-                return $SingleplayerModel->FinishKPIMission($ID);
+        $MissionModel = new MissionModel();
+        $MissionID = $_POST["MissionID"];
+        $doMissionAction = $_POST["doMissionAction"];
+        switch ($doMissionAction) {
+            case 'finishKPIMission':
+                $returnData = $MissionModel->finishKPIMission($MissionID);
                 break;
-            case 'KPIUnfinish':
-                return $SingleplayerModel->UnfinishKPIMission($ID);
+            case 'unfinishKPIMission':
+                $returnData = $MissionModel->unfinishKPIMission($MissionID);
                 break;
-            case 'KPIDelect':
-                return $SingleplayerModel->DelectKPIMission($ID);
-                break;
-            case 'Finish':
-                return $SingleplayerModel->FinishMission($ID);
-                break;
-            case 'Unfinish':
-                return $SingleplayerModel->UnfinishMission($ID);
-                break;
-            case 'Delect':
-                return $SingleplayerModel->DelectMission($ID);
+            case 'delectMission':
+                $returnData = $MissionModel->delectMission($MissionID);
                 break;
         }
-        
-        
+        echo json_encode($returnData, true);
     }
 
 }
