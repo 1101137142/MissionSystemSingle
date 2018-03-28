@@ -21,6 +21,7 @@ class SingleTimeMission implements actionPerformed {
                     $ProcessingMission[] = array(
                         'MissionID' => $row['MissionID'],
                         'MissionName' => $row['MissionName'],
+                        'MissionDetails' => $row['MissionDetails'],
                         'MissionPoint' => $row['MissionPoint'],
                         'MissionStartTime' => $row['MissionStartTime'],
                         'MissionEndTime' => $row['MissionEndTime'],
@@ -35,6 +36,7 @@ class SingleTimeMission implements actionPerformed {
                     $FinishMission[] = array(
                         'MissionID' => $row['MissionID'],
                         'MissionName' => $row['MissionName'],
+                        'MissionDetails' => $row['MissionDetails'],
                         'MissionPoint' => $row['MissionPoint'],
                         'MissionLastFinishTime' => $row['MissionLastFinishTime'],
                         'MissionEndTime' => $row['MissionEndTime'],

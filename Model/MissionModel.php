@@ -58,7 +58,7 @@ class MissionModel extends Model {
         return $stmt_search->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    function finishMission($ID) {
+    function finishKPIMission($ID) {
         $this->cont->beginTransaction();
         //鎖表
         $sql_search = "SELECT * FROM `mss_mission` WHERE MissionID=:MissionID FOR UPDATE";
@@ -88,16 +88,16 @@ class MissionModel extends Model {
         }
         if ($update == 'Y') {
             $this->cont->commit();
-            $MissionMsg = '任務狀態變更';
+            $MissionMsg = 'true';
         } else {
             $this->cont->rollback();
-            $MissionMsg = '任務變更失敗';
+            $MissionMsg = 'false';
         }
 
         return $MissionMsg;
     }
 
-    function unfinishMission($ID) {
+    function unfinishKPIMission($ID) {
         $this->cont->beginTransaction();
         //鎖表
         $sql_search = "SELECT * FROM `mss_mission` WHERE MissionID=:MissionID FOR UPDATE";
@@ -130,16 +130,95 @@ class MissionModel extends Model {
 
         return $MissionMsg;
     }
-    
+
+    function finishSingleTimeMission($ID) {
+        $this->cont->beginTransaction();
+        //鎖表
+        $sql_search = "SELECT * FROM `mss_mission` WHERE MissionID=:MissionID FOR UPDATE";
+        $stmt_search = $this->cont->prepare($sql_search);
+        $status[] = $stmt_search->execute(array(':MissionID' => $ID));
+        $row_search = $stmt_search->fetchAll(PDO::FETCH_ASSOC);
+        $MissionPoint = $row_search[0]['MissionPoint'];
+        if (strtotime($row_search[0]['MissionStartTime']) < strtotime('now')) {
+            $MissionPoint = round($MissionPoint * (((strtotime($row_search[0]['MissionEndTime']) - strtotime('now')) / (strtotime($row_search[0]['MissionEndTime']) - strtotime($row_search[0]['MissionStartTime']))) + 1), 0);
+        } else {
+            $MissionPoint = $MissionPoint * 2;
+        }
+        $nowTime = date("Y-m-d H:i:s");
+        $sql_update = "UPDATE `mss_mission` set `MissionStatus`=2,`MissionFinishQuantity`=`MissionFinishQuantity`+1,`MissionLastFinishTime`=:MissionLastFinishTime WHERE MissionID=:MissionID and MissionStatus='0'";
+        $stmt_update = $this->cont->prepare($sql_update);
+        $status[] = $stmt_update->execute(array(':MissionID' => $ID, ':MissionLastFinishTime' => $nowTime));
+
+        //增加任務點數到表中
+        $sql_update = "UPDATE `mss_point` set `LastPoint`=`LastPoint`+$MissionPoint,`TotalPoint`=`TotalPoint`+$MissionPoint WHERE PlayerID='1' ";
+        $stmt_update = $this->cont->prepare($sql_update);
+        $status[] = $stmt_update->execute();
+        $update = 'Y';
+        foreach ($status as $val) {
+            if ($val != true) {
+                $update = 'N';
+            }
+        }
+        if ($update == 'Y') {
+            $this->cont->commit();
+            $MissionMsg = 'true';
+        } else {
+            $this->cont->rollback();
+            $MissionMsg = 'false';
+        }
+
+        return $MissionMsg;
+    }
+
+    function unfinishSingleTimeMission($ID) {
+        $this->cont->beginTransaction();
+        //鎖表
+        $sql_search = "SELECT * FROM `mss_mission` WHERE MissionID=:MissionID FOR UPDATE";
+        $stmt_search = $this->cont->prepare($sql_search);
+        $status[] = $stmt_search->execute(array(':MissionID' => $ID));
+        $row_search = $stmt_search->fetchAll(PDO::FETCH_ASSOC);
+        $MissionPoint = $row_search[0]['MissionPoint'];
+        if (strtotime($row_search[0]['MissionStartTime']) < strtotime($row_search[0]['MissionLastFinishTime'])) {
+            $MissionPoint = round($MissionPoint * (((strtotime($row_search[0]['MissionEndTime']) - strtotime($row_search[0]['MissionLastFinishTime'])) / (strtotime($row_search[0]['MissionEndTime']) - strtotime($row_search[0]['MissionStartTime']))) + 1), 0);
+        } else {
+            $MissionPoint = $MissionPoint * 2;
+        }
+        //將任務回歸為未完成狀態 並扣除完成次數
+        $sql_update = "UPDATE `mss_mission` set `MissionStatus`=0,`MissionFinishQuantity`=`MissionFinishQuantity`-1,`MissionLastFinishTime`=NULL WHERE `MissionID`=:MissionID and `MissionStatus`='2' ";
+        $stmt_update = $this->cont->prepare($sql_update);
+        $status[] = $stmt_update->execute(array(':MissionID' => $ID));
+
+        //從表中扣除任務點數
+        $sql_update = "UPDATE `mss_point` set `LastPoint`=`LastPoint`-$MissionPoint,`TotalPoint`=`TotalPoint`-$MissionPoint WHERE PlayerID='1' ";
+        $stmt_update = $this->cont->prepare($sql_update);
+        $status[] = $stmt_update->execute();
+        $update = 'Y';
+        foreach ($status as $val) {
+            if ($val != true) {
+                $update = 'N';
+            }
+        }
+        if ($update == 'Y') {
+            $this->cont->commit();
+            $MissionMsg = 'true';
+        } else {
+            $this->cont->rollback();
+            $MissionMsg = 'false';
+        }
+
+        return $MissionMsg;
+    }
+
     function delectMission($ID) {
         //更改任務狀態為 9 刪除
         $sql_update = "UPDATE `mss_mission` set `MissionStatus`='9' WHERE `MissionID`=:MissionID ";
         $stmt_update = $this->cont->prepare($sql_update);
         $status[] = $stmt_update->execute(array(':MissionID' => $ID));
-        
-        $MissionMsg='true';
+
+        $MissionMsg = 'true';
         return $MissionMsg;
     }
+
     function selectMissionList() {
         $sql_search = 'SELECT * FROM `mss_mission` ';
         $stmt_search = $this->cont->prepare($sql_search);

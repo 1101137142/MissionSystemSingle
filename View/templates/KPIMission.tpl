@@ -97,7 +97,7 @@
             var name = $(this).attr('name');
             input_arr[name] = $(this).val();
         });
-        input_arr['MissionAttribute']='1';
+        input_arr['MissionAttribute'] = '1';
         //console.log(input_arr);
         var url = "index.php?action=createMission";
         $.ajax({
@@ -122,14 +122,15 @@
         var d = new Date();
         $('#' + field).val(d.getFullYear() + '-' + (d.getMonth() + 1 < 10 ? '0' : '') + (d.getMonth() + 1) + '-' + (d.getDate() + 1) + 'T04:00');
     }
-    ;
-
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    })
 
 
 </script>
 
 
-<div style="clear:both;">
+<div >
 
     <!--<table class="table table-hover" ID="NotFinishTable">-->
     <table class="table table-hover" ID="MissionTable">
@@ -138,7 +139,7 @@
             <td align=center>上次完成時間</td><td align=center>下次刷新時間</td><td align=center>循環週期</td>
             <td align=center>完成次數</td><td align=center>功能鍵</td></tr>
         <{foreach key=key item=item from=$ProcessingMission name=ProcessingMission}>
-        <tr ><td align=center ><{$item.MissionID}></td><td align=center><{$item.MissionName}></td><td align=center><{$item.MissionPoint}></td>
+        <tr ><td align=center ><{$item.MissionID}></td><td align=center><{$item.MissionName}><span class="oi oi-info" style="float:right;" data-toggle="tooltip" data-placement="top" title="<{$item.MissionDetails}>"></span></td><td align=center><{$item.MissionPoint}></td>
             <td align=center><{$item.MissionLastFinishTime}></td><td align=center><{$item.NextRefreshTime}></td><td align=center><{$item.MissionPeriod}><{$item.MissionPeriodList}></td>
             <td align="center"><{$item.MissionFinishQuantity}></td>
             <td align=center>
@@ -156,7 +157,7 @@
             <td align=center>上次完成時間</td><td align=center>下次刷新時間</td><td align=center>循環週期</td>
             <td align=center>完成次數</td><td align=center>功能鍵</td></tr>
         <{foreach key=key item=item2 from=$FinishMission name=FinishMission}>
-        <tr ><td align=center ><{$item2.MissionID}></td><td align=center><{$item2.MissionName}></td><td align=center><{$item2.MissionPoint}></td>
+        <tr ><td align=center ><{$item2.MissionID}></td><td align=center><{$item2.MissionName}><span class="oi oi-info" style="float:right;" data-toggle="tooltip" data-placement="top" title="<{$item2.MissionDetails}>"></span></td><td align=center><{$item2.MissionPoint}></td>
             <td align=center><{$item2.MissionLastFinishTime}></td><td align=center><{$item2.NextRefreshTime}></td><td align=center><{$item2.MissionPeriod}><{$item2.MissionPeriodList}></td>
             <td align="center"><{$item2.MissionFinishQuantity}></td>
             <td align=center>
@@ -192,12 +193,13 @@
                         </div>
                         <div class="form-group">
                             <label for="MissionPeriod">任務週期：</label><br>
-                            <input type="text" class="form-control notnull" id="MissionPeriod" name="MissionPeriod" placeholder="Enter Mission Period" style="display: inline;width: 75%;" data-fname="任務週期">
+                            <input type="number" class="form-control notnull" id="MissionPeriod" name="MissionPeriod" placeholder="Enter Mission Period" style="display: inline;width: 75%;" data-fname="任務週期">
                             <select ID="MissionPeriodList" name="MissionPeriodList" class="form-control" style="display: inline;width: 24%;">
                                 <option value="1">小時</option>
                                 <option value="2">天</option>
-                                <option value="3">月</option>
-                                <option value="4">年</option>
+                                <option value="3">周</option>
+                                <option value="4">月</option>
+                                <option value="5">年</option>
                             </select>
                         </div>
                         <div class="form-group">

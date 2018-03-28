@@ -16,6 +16,12 @@ class MissionAction implements actionPerformed {
             case 'delectMission':
                 $returnData = $MissionModel->delectMission($MissionID);
                 break;
+            case 'finishSingleTimeMission':
+                $returnData = $MissionModel->finishSingleTimeMission($MissionID);
+                break;
+            case 'unfinishSingleTimeMission':
+                $returnData = $MissionModel->unfinishSingleTimeMission($MissionID);
+                break;
         }
         echo json_encode($returnData, true);
     }

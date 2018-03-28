@@ -15,10 +15,15 @@ class KPIMission implements actionPerformed {
                     $NextRefreshTime = strtotime($row['MissionRefreshTime']) + (60 * 60 * 24 * $row['MissionPeriod']);
                     break;
                 case '3':
-                    $MissionPerioList = '月';
+                    $MissionPerioList = '周';
                     $NextRefreshTime = strtotime($row['MissionRefreshTime']) + (60 * 60 * 24 * 7 * $row['MissionPeriod']);
                     break;
                 case '4':
+                    $MissionPerioList = '月';
+                    $RefreshTime = strtotime($row['MissionRefreshTime']);
+                    $NextRefreshTime = mktime(date("G", $RefreshTime), date("i", $RefreshTime), date("s", $RefreshTime), date("m", $RefreshTime) + $row['MissionPeriod'], date("d", $RefreshTime), date("Y", $RefreshTime));
+                    break;
+                case '5':
                     $MissionPerioList = '年';
                     $RefreshTime = strtotime($row['MissionRefreshTime']);
                     $NextRefreshTime = mktime(date("G", $RefreshTime), date("i", $RefreshTime), date("s", $RefreshTime), date("m", $RefreshTime), date("d", $RefreshTime), date("Y", $RefreshTime) + $row['MissionPeriod']);
@@ -29,27 +34,29 @@ class KPIMission implements actionPerformed {
                     break;
             }
             $NextRefreshTime = date("Y-m-d H:i:s", $NextRefreshTime);
-            /*`MissionID`, `MissionName`, `MissionDetails`, `MissionPoint`,
-            `MissionCreateTime`, `MissionStartTime`, `MissionLastFinishTime`,
-            `MissionRefreshTime`, `MissionEndTime`, `MissionFinishQuantity`,
-            `MissionRefreshQuantity`, `MissionStatus`, `MissionEndQuantity`,
-            `MissionPeriod`, `MissionPeriodList`, `MissionAttribute`*/
+            /* `MissionID`, `MissionName`, `MissionDetails`, `MissionPoint`,
+              `MissionCreateTime`, `MissionStartTime`, `MissionLastFinishTime`,
+              `MissionRefreshTime`, `MissionEndTime`, `MissionFinishQuantity`,
+              `MissionRefreshQuantity`, `MissionStatus`, `MissionEndQuantity`,
+              `MissionPeriod`, `MissionPeriodList`, `MissionAttribute` */
             switch ($row['MissionStatus']) {
                 case 0:
                     $ProcessingMission[] = array(
                         'MissionID' => $row['MissionID'],
                         'MissionName' => $row['MissionName'],
+                        'MissionDetails' => $row['MissionDetails'],
                         'MissionPoint' => $row['MissionPoint'],
                         'MissionLastFinishTime' => $row['MissionLastFinishTime'],
                         'NextRefreshTime' => $NextRefreshTime,
                         'MissionPeriod' => $row['MissionPeriod'],
-                        'MissionPeriodList' => $MissionPerioList,                        
+                        'MissionPeriodList' => $MissionPerioList,
                         'MissionFinishQuantity' => $row['MissionFinishQuantity']);
                     break;
                 case 1:
                     $FinishMission[] = array(
                         'MissionID' => $row['MissionID'],
                         'MissionName' => $row['MissionName'],
+                        'MissionDetails' => $row['MissionDetails'],
                         'MissionPoint' => $row['MissionPoint'],
                         'MissionLastFinishTime' => $row['MissionLastFinishTime'],
                         'NextRefreshTime' => $NextRefreshTime,

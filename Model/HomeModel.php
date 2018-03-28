@@ -41,6 +41,13 @@ class HomeModel extends Model {
                             };
                             break;
                         case '4':
+                            while (strtotime("now") >= mktime(date("G", $RefreshTime), date("i", $RefreshTime), date("s", $RefreshTime), date("m", $RefreshTime) + $row['MissionPeriod'], date("d", $RefreshTime), date("Y", $RefreshTime))) {
+                                $RefreshTime = mktime(date("G", $RefreshTime), date("i", $RefreshTime), date("s", $RefreshTime), date("m", $RefreshTime) + $row['MissionPeriod'], date("d", $RefreshTime), date("Y", $RefreshTime));
+                                $RefreshQuantity = $RefreshQuantity + 1;
+                                $refresh = true;
+                            };
+                            break;
+                        case '5':
                             while (strtotime("now") >= mktime(date("G", $RefreshTime), date("i", $RefreshTime), date("s", $RefreshTime), date("m", $RefreshTime), date("d", $RefreshTime), date("Y", $RefreshTime) + $row['MissionPeriod'])) {
                                 $RefreshTime = mktime(date("G", $RefreshTime), date("i", $RefreshTime), date("s", $RefreshTime), date("m", $RefreshTime), date("d", $RefreshTime), date("Y", $RefreshTime) + $row['MissionPeriod']);
                                 $RefreshQuantity = $RefreshQuantity + 1;

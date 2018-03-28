@@ -5,7 +5,7 @@
             type: "POST",
             url: url,
             dataType: "json",
-            data: {MissionID: ID, doMissionAction: 'finishKPIMission'}, // serializes the form's elements.
+            data: {MissionID: ID, doMissionAction: 'finishSingleTimeMission'}, // serializes the form's elements.
             success: function (data)
             {
                 window.location.reload();
@@ -23,7 +23,7 @@
             type: "POST",
             url: url,
             dataType: "json",
-            data: {MissionID: ID, doMissionAction: 'unfinishKPIMission'}, // serializes the form's elements.
+            data: {MissionID: ID, doMissionAction: 'unfinishSingleTimeMission'}, // serializes the form's elements.
             success: function (data)
             {
                 window.location.reload();
@@ -97,16 +97,16 @@
             input_arr[name] = $(this).val();
         });
         /* `MissionID`, `MissionName`, `MissionDetails`, `MissionPoint`,
-              `MissionCreateTime`, `MissionStartTime`, `MissionLastFinishTime`,
-              `MissionRefreshTime`, `MissionEndTime`, `MissionFinishQuantity`,
-              `MissionRefreshQuantity`, `MissionStatus`, `MissionEndQuantity`,
-              `MissionPeriod`, `MissionPeriodList`, `MissionAttribute` 
+         `MissionCreateTime`, `MissionStartTime`, `MissionLastFinishTime`,
+         `MissionRefreshTime`, `MissionEndTime`, `MissionFinishQuantity`,
+         `MissionRefreshQuantity`, `MissionStatus`, `MissionEndQuantity`,
+         `MissionPeriod`, `MissionPeriodList`, `MissionAttribute` 
          $MissionName, $MissionDetails, $MissionPoint, $MissionStartTime, $MissionEndTime, $MissionEndQuantity, $MissionPeriod, $MissionPeriodList, $MissionAttribute
          */
-        input_arr['MissionAttribute']='3';
-        input_arr['MissionEndQuantity']='1';
-        input_arr['MissionPeriod']='9';
-        input_arr['MissionPeriodList']='9';
+        input_arr['MissionAttribute'] = '3';
+        input_arr['MissionEndQuantity'] = '1';
+        input_arr['MissionPeriod'] = '9';
+        input_arr['MissionPeriodList'] = '9';
         //console.log(input_arr);
         var url = "index.php?action=createMission";
         $.ajax({
@@ -131,8 +131,9 @@
         var d = new Date();
         $('#' + field).val(d.getFullYear() + '-' + (d.getMonth() + 1 < 10 ? '0' : '') + (d.getMonth() + 1) + '-' + (d.getDate() + 1) + 'T04:00');
     }
-    ;
-
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    })
 
 
 </script>
@@ -146,7 +147,7 @@
         <tr><td align=center>任務ID</td><td align=center>任務名稱</td><td align=center>分數</td>
             <td align=center>任務開始時間</td><td align=center>任務結束時間</td><td align=center>進度條</td><td align=center>功能鍵</td></tr>
         <{foreach key=key item=item from=$ProcessingMission name=ProcessingMission}>
-        <tr ><td align=center ><{$item.MissionID}></td><td align=center><{$item.MissionName}></td><td align=center><{$item.MissionPoint}></td>
+        <tr ><td align=center ><{$item.MissionID}></td><td align=center><{$item.MissionName}><span class="oi oi-info" style="float:right;" data-toggle="tooltip" data-placement="top" title="<{$item.MissionDetails}>"></span></td><td align=center><{$item.MissionPoint}></td>
             <td align=center><{$item.MissionStartTime}></td><td align=center><{$item.MissionEndTime}></td><td align=center><div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated <{if $item.percentage<=60}> bg-success <{elseif $item.percentage>=61 && $item.percentage<=80}> bg-info <{elseif $item.percentage>=81 && $item.percentage<100}> bg-warning  <{elseif $item.percentage>=100 }> bg-danger <{/if}>" role="progressbar" style="width: <{$item.percentage}>%" aria-valuenow="<{$item.percentage}>" aria-valuemin="0" aria-valuemax="100"><{$item.percentage}>%</div></div></td>
             <td align=center>
                 <button id="EditBt<{$item.MissionID}>" type="button" class="btn btn-outline-warning" onclick=EditMission(<{$item.MissionID}>)>修改</button>
@@ -160,11 +161,11 @@
         <table class="table table-hover" ID="FinishTable">-->
         <tr ><td colspan="2" align=left>已完成任務</td><td align=right colspan="8"><button type="button" class="btn btn-outline-success disabled">已完成任務</button></td></tr>
         <tr><td align=center>任務ID</td><td align=center>任務名稱</td><td align=center>分數</td>
-            <td align=center>任務開始時間</td><td align=center>任務結束時間</td><td align=center>進度條</td><td align=center>功能鍵</td></tr>
+            <td align=center>任務完成時間</td><td align=center>任務結束時間</td><td align=center>進度條</td><td align=center>功能鍵</td></tr>
         <{foreach key=key item=item2 from=$FinishMission name=FinishMission}>
-        <tr ><td align=center ><{$item2.MissionID}></td><td align=center><{$item2.MissionName}></td><td align=center><{$item2.MissionPoint}></td>
-            <td align=center><{$item2.MissionStartTime}></td><td align=center><{$item2.MissionEndTime}></td>
-            <td align="center"><div class="progress"><div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: <{$item.percentage}>%" aria-valuenow="<{$item.percentage}>" aria-valuemin="0" aria-valuemax="100"><{$item.percentage}>%</div></div></td>
+        <tr ><td align=center ><{$item2.MissionID}></td><td align=center><{$item2.MissionName}><span class="oi oi-info" style="float:right;" data-toggle="tooltip" data-placement="top" title="<{$item2.MissionDetails}>"></span></td><td align=center><{$item2.MissionPoint}></td>
+            <td align=center><{$item2.MissionLastFinishTime}></td><td align=center><{$item2.MissionEndTime}></td>
+            <td align="center" style="width:150px"><div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: <{$item2.percentage}>%" aria-valuenow="<{$item2.percentage}>" aria-valuemin="0" aria-valuemax="100"><{$item2.percentage}>%</div></div></td>
             <td align=center>
                 <button id="EditBt<{$item2.MissionID}>" type="button" class="btn btn-outline-warning" onclick=EditMission(<{$item2.MissionID}>)>修改</button>
                 <button id="FinishBt<{$item2.MissionID}>" type="button" class="btn btn-outline-secondary" onclick=UnfinishMission(<{$item2.MissionID}>)>取消完成</button>
