@@ -27,7 +27,7 @@ class MissionList implements actionPerformed {
                 }
             } else if ($row['MissionRefreshQuantity'] == $row['MissionFinishQuantity'] and $row['MissionFinishQuantity'] != 0) {
                 $percentage = '100';
-            }else{
+            } else {
                 $percentage = '0';
             }
             switch ($row['MissionPeriodList']) {
@@ -47,27 +47,42 @@ class MissionList implements actionPerformed {
                     $MissionPeriod = $row['MissionPeriod'] . ' 年';
                     break;
                 default :
-                    $MissionPeriod='';
+                    $MissionPeriod = '';
                     break;
             }
             switch ($row['MissionStatus']) {
                 case '0':
-                    $MissionStatus = $row['MissionStatus'] .' . 未完成';
+                    $MissionStatus = $row['MissionStatus'] . ' . 未完成';
                     break;
                 case '1':
-                    $MissionStatus = $row['MissionStatus'] .' . 完成';
+                    $MissionStatus = $row['MissionStatus'] . ' . 完成';
                     break;
                 case '2':
-                    $MissionStatus = $row['MissionStatus'] .' . 結束';
+                    $MissionStatus = $row['MissionStatus'] . ' . 結束';
                     break;
                 case '3':
-                    $MissionStatus = $row['MissionStatus'] .' . 失敗';
+                    $MissionStatus = $row['MissionStatus'] . ' . 失敗';
                     break;
                 case '9':
-                    $MissionStatus = $row['MissionStatus'] .' . 刪除';
+                    $MissionStatus = $row['MissionStatus'] . ' . 刪除';
                     break;
                 default :
-                    $MissionStatus='狀態Err';
+                    $MissionStatus = '狀態Err';
+                    break;
+            }
+
+            switch ($row['MissionAttribute']) {
+                case '1':
+                    $MissionAttribute = ' . KPI任務';
+                    break;
+                case '2':
+                    $MissionAttribute = ' . 重複性任務';
+                    break;
+                case '3':
+                    $MissionAttribute = ' . 一次性任務';
+                    break;
+                default :
+                    $MissionAttribute = '任務型態Err';
                     break;
             }
 
@@ -95,7 +110,8 @@ class MissionList implements actionPerformed {
                 'MissionPeriod' => $MissionPeriod,
                 'MissionPeriodList' => $row['MissionPeriodList'],
                 'MissionEndQuantity' => $row['MissionEndQuantity'],
-                'percentage' => $percentage);
+                'percentage' => $percentage,
+                'MissionAttributeName'=>$MissionAttribute);
         }
 
 

@@ -4,7 +4,7 @@ class HomeModel extends Model {
 
     function reflashMissionStatus() {
         //找出所有狀態為 未完成 或 完成 的任務 
-        $sql = "SELECT * FROM `mss_mission` WHERE `MissionStatus` = '1' or `MissionStatus` = '2'";
+        $sql = "SELECT * FROM `mss_mission` WHERE `MissionStatus` = '0' or `MissionStatus` = '1'";
         $stmt = $this->cont->prepare($sql);
         $status[] = $stmt->execute();
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
