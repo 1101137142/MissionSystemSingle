@@ -118,6 +118,9 @@
         })
         //e.preventDefault(); // avoid to execute the actual submit of the form.
     }
+    function EditMission(ID){
+        document.location.href='index.php?action=Showpage&Content=MissionList&editMission='+ID;
+    }
     function setTime(field) {
         var d = new Date();
         $('#' + field).val(d.getFullYear() + '-' + (d.getMonth() + 1 < 10 ? '0' : '') + (d.getMonth() + 1) + '-' + (d.getDate() + 1) + 'T04:00');

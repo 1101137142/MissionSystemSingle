@@ -7,20 +7,26 @@ class MissionAction implements actionPerformed {
         $MissionID = $_POST["MissionID"];
         $doMissionAction = $_POST["doMissionAction"];
         switch ($doMissionAction) {
+            case 'finishMission':
             case 'finishKPIMission':
-                $returnData = $MissionModel->finishKPIMission($MissionID);
+            case 'finishSingleTimeMission':
+                $returnData = $MissionModel->finishMission($MissionID);
                 break;
+            case 'unfinishMission':
             case 'unfinishKPIMission':
-                $returnData = $MissionModel->unfinishKPIMission($MissionID);
+            case 'unfinishSingleTimeMission':
+                $returnData = $MissionModel->unfinishMission($MissionID);
                 break;
             case 'delectMission':
                 $returnData = $MissionModel->delectMission($MissionID);
                 break;
-            case 'finishSingleTimeMission':
-                $returnData = $MissionModel->finishSingleTimeMission($MissionID);
+            case 'EditMission':
+                $returnData = $MissionModel->selectEditMission($MissionID)->fetch(PDO::FETCH_ASSOC);
                 break;
-            case 'unfinishSingleTimeMission':
-                $returnData = $MissionModel->unfinishSingleTimeMission($MissionID);
+            case 'doEditMission':
+                $returnData=$MissionModel->doEditMission($event->getPost());
+                //$returnData=$event->getPost();
+                //$returnData = $MissionModel->selectEditMission($MissionID);
                 break;
         }
         echo json_encode($returnData, true);

@@ -15,6 +15,5 @@ class Event {
     }
     public function getPost() {
         return $this->post;
-        
     }
 }

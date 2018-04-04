@@ -23,7 +23,7 @@ class Controller {
         require_once $ACTION . $action . '.php';
 
         $actionListener = NULL;
-        $actionListener = new $action();
+        $actionListener = new $action($this->Event);
 
         return $actionListener->actionPerformed($this->Event);
     }

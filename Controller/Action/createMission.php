@@ -16,28 +16,21 @@ class createMission implements actionPerformed {
         $MissionPoint = @$_POST["MissionPoint"];
         $MissionPeriod = @$_POST["MissionPeriod"];
         $MissionPeriodList = @$_POST["MissionPeriodList"];
-        if (isset($_POST['MissionEndQuantity'])) {
-            $MissionEndQuantity ="'".$_POST['MissionEndQuantity']."'";
-        }else{
-            $MissionEndQuantity='';
-        }
+        $MissionEndQuantity = @$_POST['MissionEndQuantity'];
         $MissionStartTime = @$_POST["MissionStartTime"];
-        if (isset($_POST['MissionEndTime'])) {
-            $MissionEndTime ="'".$_POST['MissionEndTime']."'";
-        }else{
-            $MissionEndTime='';
-        }
-        if (isset($_POST['MissionDetails'])) {
-            $MissionDetails ="'".$_POST['MissionDetails']."'";
-        }else{
-            $MissionDetails='';
-        }
+        $MissionEndTime = @$_POST['MissionEndTime'];
+        /* if (isset($_POST['MissionEndTime'])) {
+          $MissionEndTime ="'".$_POST['MissionEndTime']."'";
+          }else{
+          $MissionEndTime='';
+          } */
+        $MissionDetails = @$_POST['MissionDetails'];
         $MissionAttribute = @$_POST['MissionAttribute'];
         $CreateStatus = $MissionModel->CreateMission($MissionName, $MissionDetails, $MissionPoint, $MissionStartTime, $MissionEndTime, $MissionEndQuantity, $MissionPeriod, $MissionPeriodList, $MissionAttribute);
 
         //$CreateStatus['Returnmsg'] = 'Mission is created';
         //echo $_POST;
-        echo json_encode($CreateStatus,true);
+        echo json_encode($CreateStatus, true);
         //echo $Name;
     }
 
