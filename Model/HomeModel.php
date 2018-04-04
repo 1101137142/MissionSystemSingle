@@ -68,4 +68,11 @@ class HomeModel extends Model {
         }
     }
 
+    function getPoint() {
+        $sql_search = "SELECT * FROM `mss_point`";
+        $stmt_search = $this->cont->prepare($sql_search);
+        $status[] = $stmt_search->execute();
+        return $stmt_search;
+    }
+
 }

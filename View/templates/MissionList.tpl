@@ -1,4 +1,16 @@
 <script>
+    $(document).ready(function () {
+        $('.EditMissionBtn').hide();
+        $('[data-toggle="tooltip"]').tooltip();
+        var url = location.href;
+        var ary = url.split('?')[1].split('&');
+        for (i = 0; i <= ary.length - 1; i++) {
+            if (ary[i].split('=')[0] == 'editMission') {
+                var MissionID = ary[i].split('=')[1];
+                EditMission(MissionID);
+            }
+        }
+    })
     function FinishMission(ID) {
         var url = "index.php?action=MissionAction";
         $.ajax({
@@ -289,17 +301,7 @@
         $('.show').eq(1).find('.active').eq(1).find('#' + field).val(d.getFullYear() + '-' + (d.getMonth() + 1 < 10 ? '0' : '') + (d.getMonth() + 1) + '-' + (d.getDate() + 1 < 10 ? '0' : '') + (d.getDate() + 1) + 'T04:00');
     }
 
-    $(document).ready(function () {
-    $('.EditMissionBtn').hide();
-            $('[data-toggle="tooltip"]').tooltip();
-            var url = location.href;
-            var ary = url.split('?')[1].split('&');
-            for (i = 0; i <= ary.length - 1; i++){
-    if (ary[i].split('=')[0] == 'editMission'){
-    var MissionID = ary[i].split('=')[1];
-            EditMission(MissionID); }
-    }
-    })
+
 
 
 
@@ -583,6 +585,7 @@
                                             <option value="1">1 . 完成</option>
                                             <option value="2">2 . 結束</option>
                                             <option value="3">3 . 失敗</option>
+                                            <option value="9">9 . 刪除</option>
                                         </select>
                                     </div>
                                 </div>
@@ -655,6 +658,7 @@
                                                 <option value="1">1 . 完成</option>
                                                 <option value="2">2 . 結束</option>
                                                 <option value="3">3 . 失敗</option>
+                                                <option value="9">9 . 刪除</option>
                                             </select>
                                         </div>
                                     </div>
@@ -715,6 +719,7 @@
                                             <option value="1">1 . 完成</option>
                                             <option value="2">2 . 結束</option>
                                             <option value="3">3 . 失敗</option>
+                                            <option value="9">9 . 刪除</option>
                                         </select>
                                     </div>
                                 </div>

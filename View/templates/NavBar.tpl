@@ -10,6 +10,28 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     </head>
+    <script>
+        $(document).ready(function () {
+            var url = "index.php?action=HomeAction";
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: "json",
+                data: { doHomeAction: 'getPoint'}, // serializes the form's elements.
+                success: function (data)
+                {
+                    //console.log(data['LastPoint']);
+                    
+                    $('p').eq(0).html('你的分數：'+data['LastPoint']);
+                    
+                },
+                error: function (data) {
+                    console.log('An error occurred.');
+                    console.log(data);
+                }
+            });
+        })
+    </script>
 
     <body role="document">
         <nav class="navbar  navbar-expand-lg  navbar-dark bg-dark">
@@ -52,6 +74,7 @@
                         <a class="nav-link " href="index.php?action=Showpage&Content=Store">Shop Store</a><!--分數購物商店-->
                     </li>
                 </ul>
+                <p class="text-light bg-dark align-middle" style="margin-bottom: 0px;">你的分數：</p>
             </div>
         </nav>
 
