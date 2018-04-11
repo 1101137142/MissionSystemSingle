@@ -66,6 +66,12 @@ class HomeModel extends Model {
                 }
             }
         }
+        $sql_update="UPDATE `mss_shopstore` SET `CommodityStatus`=1 WHERE NOW() > `CommodityStartTime` AND `CommodityStatus` =0 ";
+        $stmt_update = $this->cont->prepare($sql_update);
+        $status[] = $stmt_update->execute();
+        $sql_update="UPDATE `mss_shopstore` SET `CommodityStatus`=3 WHERE (NOW() > `CommodityDeadline` AND `CommodityDeadline` IS NOT NULL) AND `CommodityStatus` =1 ";
+        $stmt_update = $this->cont->prepare($sql_update);
+        $status[] = $stmt_update->execute();
     }
 
     function getPoint() {

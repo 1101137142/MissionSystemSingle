@@ -23,7 +23,7 @@ class MissionList implements actionPerformed {
                         }
                         break;
                     case '2':
-                        $percentage = round((strtotime($row['MissionEndTime']) - strtotime($row['MissionLastFinishTime']) ) / (strtotime($row['MissionEndTime']) - strtotime($row['MissionStartTime'])), 2) * 100;
+                        $percentage = round((strtotime($row['MissionLastFinishTime']) - strtotime($row['MissionStartTime']) ) / (strtotime($row['MissionEndTime']) - strtotime($row['MissionStartTime'])), 2) * 100;
                         break;
                     case '3':
                         $percentage = '100';

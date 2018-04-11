@@ -71,7 +71,7 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link " href="index.php?action=Showpage&Content=Store">Shop Store</a><!--分數購物商店-->
+                        <a class="nav-link " href="index.php?action=Showpage&Content=ShopStore">Shop Store</a><!--分數購物商店-->
                     </li>
                 </ul>
                 <p class="text-light bg-dark align-middle" style="margin-bottom: 0px;">你的分數：</p>

@@ -8,6 +8,7 @@ $MODEL="Model";
 require_once $MODEL.'/Model.php';
 require_once $MODEL.'/HomeModel.php';
 require_once $MODEL.'/MissionModel.php';
+require_once $MODEL.'/ShopModel.php';
 require_once $MODEL.'/TodolistModel.php';
 
 $VIEW="View";
