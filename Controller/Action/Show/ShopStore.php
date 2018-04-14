@@ -14,7 +14,7 @@ class ShopStore implements actionPerformed {
             $CommodityInfo[] = array(
                 'CommodityID' => $row['CommodityID'],
                 'CommodityName' => $row['CommodityName'],
-                'CommodityDetail' => $row['CommodityDetail'],
+                'CommodityDetails' => $row['CommodityDetails'],
                 'CommodityImgScr' => $row['CommodityImgScr'],
                 'CommodityPoint' => $row['CommodityPoint'],
                 'CommodityMoney' => $row['CommodityMoney'],

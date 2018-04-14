@@ -17,13 +17,13 @@
                 type: "POST",
                 url: url,
                 dataType: "json",
-                data: { doHomeAction: 'getPoint'}, // serializes the form's elements.
+                data: {doHomeAction: 'getPoint'}, // serializes the form's elements.
                 success: function (data)
                 {
                     //console.log(data['LastPoint']);
-                    
-                    $('p').eq(0).html('你的分數：'+data['LastPoint']);
-                    
+
+                    $('p').eq(0).html('你的分數：' + data['LastPoint']);
+
                 },
                 error: function (data) {
                     console.log('An error occurred.');
@@ -70,8 +70,14 @@
                             <a class="dropdown-item" href="index.php?action=Showpage&Content=SingleTimeMission">Mission</a>
                         </div>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link " href="index.php?action=Showpage&Content=ShopStore">Shop Store</a><!--分數購物商店-->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="PreparationsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Store
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="PreparationsDropdown">
+                            <a class="dropdown-item" href="index.php?action=Showpage&Content=CommodityList">Commodity List</a><!--商品列表-->
+                            <a class="dropdown-item" href="index.php?action=Showpage&Content=ShopStore">Shop Store</a><!--分數購物商店-->
+                        </div>
                     </li>
                 </ul>
                 <p class="text-light bg-dark align-middle" style="margin-bottom: 0px;">你的分數：</p>
