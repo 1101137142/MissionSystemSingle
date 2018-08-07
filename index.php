@@ -9,8 +9,7 @@ require_once $MODEL.'/Model.php';
 require_once $MODEL.'/HomeModel.php';
 require_once $MODEL.'/MissionModel.php';
 require_once $MODEL.'/ShopModel.php';
-require_once $MODEL.'/TodolistModel.php';
-
+require_once $MODEL.'/GoalModel.php';
 $VIEW="View";
 require_once $VIEW."/KSmarty.php";
 

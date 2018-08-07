@@ -197,8 +197,8 @@
             data: input_arr,
             success: function (data) {
                 console.log(data);
-                //window.location.reload();
-                //document.location.href = 'index.php?action=Showpage&Content=CommodityList';
+                window.location.reload();
+                document.location.href = 'index.php?action=Showpage&Content=CommodityList';
             },
             error: function (data) {
                 console.log('An error occurred.');
@@ -213,8 +213,6 @@
         
     }
 </script>
-
-
 <div style="clear:both;width:100%">
 
     <!--<table class="table table-hover" ID="NotFinishTable">-->

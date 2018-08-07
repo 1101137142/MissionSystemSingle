@@ -9,6 +9,14 @@
         <link href="./libs/open-iconic-master/font/css/open-iconic-bootstrap.css" rel="stylesheet">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
+        <script src="https://kendo.cdn.telerik.com/2018.1.221/js/angular.min.js"></script>
+        <script src="https://kendo.cdn.telerik.com/2018.1.221/js/kendo.all.min.js"></script>
+
+        <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2018.1.221/styles/kendo.common.min.css">
+        <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2018.1.221/styles/kendo.default.min.css">
+        <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2018.1.221/styles/kendo.default.mobile.min.css" />
+
+
     </head>
     <script>
         $(document).ready(function () {
@@ -32,7 +40,6 @@
             });
         })
     </script>
-
     <body role="document">
         <nav class="navbar  navbar-expand-lg  navbar-dark bg-dark">
             <a class="navbar-brand" href="index.php">MSS-Mission System Single</a>
@@ -49,14 +56,14 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="PreparationsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Preparations
+                            Goal
                         </a>
                         <div class="dropdown-menu" aria-labelledby="PreparationsDropdown">
-                            <h6 class="dropdown-header">Purpose/Objective/Solve the problem</h6>
-                            <a class="dropdown-item" href="index.php?action=Showpage&Content=KPIMission">Objective</a>
+                            <h6 class="dropdown-header">Long-term goal</h6>
+                            <a class="dropdown-item" href="index.php?action=Showpage&Content=LongTermGoalList">Long Term Goal</a>
                             <div class="dropdown-divider"></div>
-                            <h6 class="dropdown-header">To do list</h6>
-                            <a class="dropdown-item" href="index.php?action=Showpage&Content=TDL">To do list</a>
+                            <h6 class="dropdown-header">Medium-term goal</h6>
+                            <a class="dropdown-item" href="index.php?action=Showpage&Content=MediumTermGoalList">Medium Term Goal</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">

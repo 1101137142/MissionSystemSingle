@@ -9,7 +9,7 @@
             success: function (data)
             {
                 console.log(data);
-                //window.location.reload();
+                window.location.reload();
             },
             error: function (data) {
                 console.log('An error occurred.');
@@ -42,10 +42,12 @@
         <{foreach key=key item=item from=$CommodityInfo name=CommodityInfo}>
         <div class="col-2">
             <div class="card" style="width: 18rem;">
+                <div class="card-body" style="height: 286px;width: 286px;">
                 <img class="card-img-top" src="<{$item.CommodityImgScr}>" alt="Card image cap">
+                </div>
                 <div class="card-body">
                     <h5 class="card-title"><{$item.CommodityName}></h5>
-                    <p class="card-text"><{$item.CommodityDetails}></p>
+                    <p class="card-text" style="height: 72px;" ><{$item.CommodityDetails}></p>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item"><table style="width:100%"><tr><td style="float:left">需求點數：</td><td style="float:right"><{$item.CommodityPoint}></td></tr></table></li>
