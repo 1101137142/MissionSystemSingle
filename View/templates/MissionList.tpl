@@ -297,8 +297,9 @@
     }
     function setTime(field) {
         var d = new Date();
-        $('.show').eq(0).find('.active').eq(1).find('#' + field).val(d.getFullYear() + '-' + (d.getMonth() + 1 < 10 ? '0' : '') + (d.getMonth() + 1) + '-' + (d.getDate() + 1 < 10 ? '0' : '') + (d.getDate() + 1) + 'T04:00');
-        $('.show').eq(1).find('.active').eq(1).find('#' + field).val(d.getFullYear() + '-' + (d.getMonth() + 1 < 10 ? '0' : '') + (d.getMonth() + 1) + '-' + (d.getDate() + 1 < 10 ? '0' : '') + (d.getDate() + 1) + 'T04:00');
+        d.setDate(d.getDate()+1);
+        $('.show').eq(0).find('.active').eq(1).find('#' + field).val(d.getFullYear() + '-' + (d.getMonth() + 1 < 10 ? '0' : '') + (d.getMonth() + 1) + '-' + (d.getDate()  < 10 ? '0' : '') + (d.getDate() ) + 'T04:00');
+        $('.show').eq(1).find('.active').eq(1).find('#' + field).val(d.getFullYear() + '-' + (d.getMonth() + 1 < 10 ? '0' : '') + (d.getMonth() + 1) + '-' + (d.getDate()  < 10 ? '0' : '') + (d.getDate() ) + 'T04:00');
     }
 
 

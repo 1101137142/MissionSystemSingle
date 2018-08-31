@@ -123,7 +123,8 @@
     }
     function setTime(field) {
         var d = new Date();
-        $('#' + field).val(d.getFullYear() + '-' + (d.getMonth() + 1 < 10 ? '0' : '') + (d.getMonth() + 1) + '-' + (d.getDate() + 1) + 'T04:00');
+        d.setDate(d.getDate()+1);
+        $('#' + field).val(d.getFullYear() + '-' + (d.getMonth() + 1 < 10 ? '0' : '') + (d.getMonth() + 1) + '-' + (d.getDate()  < 10 ? '0' : '')+ (d.getDate()) + 'T04:00');
     }
     $(function () {
     $('[data-toggle="tooltip"]').tooltip();
